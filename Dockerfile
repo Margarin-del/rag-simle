@@ -1,0 +1,32 @@
+# Stage 1: Build
+FROM gradle:8.5-jdk21 AS builder
+
+WORKDIR /app
+
+# Копируем исходники
+COPY build.gradle settings.gradle ./
+COPY src ./src
+
+# Собираем приложение
+RUN gradle clean build -x test --no-daemon
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# Устанавливаем curl для healthcheck
+RUN apk add --no-cache curl
+
+# Копируем jar из билдера
+COPY --from=builder /app/build/libs/rag-simple-*.jar app.jar
+
+# Создаем пользователя
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
+
+USER appuser
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

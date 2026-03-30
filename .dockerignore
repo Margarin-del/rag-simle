@@ -1,0 +1,14 @@
+.git
+.gitignore
+.gradle
+build
+target
+*.log
+*.md
+.DS_Store
+.idea
+*.iml
+gradle-wrapper.jar
+src/test
+build/tmp
+build/reports

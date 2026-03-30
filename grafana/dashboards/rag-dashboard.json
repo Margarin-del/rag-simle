@@ -1,0 +1,70 @@
+{
+  "title": "RAG System Dashboard",
+  "uid": "rag-system",
+  "panels": [
+    {
+      "title": "Documents Uploaded",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rag_documents_uploaded_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "title": "Documents Processed",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rag_documents_processed_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "title": "Search Requests",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rag_search_requests_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "title": "Cache Hits vs Misses",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rag_cache_hits_total",
+          "legendFormat": "Cache Hits"
+        },
+        {
+          "expr": "rag_cache_misses_total",
+          "legendFormat": "Cache Misses"
+        }
+      ]
+    },
+    {
+      "title": "Embedding Generation Time (ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rag_embedding_generation_time_seconds_sum / rag_embedding_generation_time_seconds_count * 1000",
+          "legendFormat": "Avg Time (ms)"
+        }
+      ]
+    },
+    {
+      "title": "Search Time (ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rag_search_time_seconds_sum / rag_search_time_seconds_count * 1000",
+          "legendFormat": "Avg Search Time (ms)"
+        }
+      ]
+    }
+  ]
+}

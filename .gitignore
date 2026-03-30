@@ -1,0 +1,13 @@
+*.hprof 
+*.log 
+logs/ 
+build/ 
+.gradle/ 
+java_pid*.hprof 
+app.log 
+test 
+.idea/ 
+*.bat 
+*.ps1 
+.DS_Store 
+*.iml 
