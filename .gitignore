@@ -5,7 +5,7 @@ build/
 .gradle/ 
 java_pid*.hprof 
 app.log 
-test 
+/test
 .idea/ 
 *.bat 
 *.ps1 
