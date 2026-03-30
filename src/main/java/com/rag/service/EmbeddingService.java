@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,8 +21,16 @@ public class EmbeddingService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final CacheService cacheService;
 
-    private static final String OLLAMA_URL = "http://localhost:11434/api/embeddings";
-    private static final String MODEL = "nomic-embed-text";
+    @Value("${spring.ai.ollama.base-url:http://localhost:11434}")
+    private String ollamaBaseUrl;
+
+    @Value("${spring.ai.ollama.embedding.model:nomic-embed-text}")
+    private String model;
+
+    private String embeddingsUrl() {
+        String base = ollamaBaseUrl.endsWith("/") ? ollamaBaseUrl.substring(0, ollamaBaseUrl.length() - 1) : ollamaBaseUrl;
+        return base + "/api/embeddings";
+    }
 
     public float[] generateEmbedding(String text) {
         // Проверяем кэш
@@ -34,11 +43,11 @@ public class EmbeddingService {
         log.info("❌ Cache MISS for embedding: {}", text);
 
         try {
-            Map<String, String> requestBody = Map.of("model", MODEL, "prompt", text);
+            Map<String, String> requestBody = Map.of("model", model, "prompt", text);
             String jsonBody = objectMapper.writeValueAsString(requestBody);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(OLLAMA_URL))
+                    .uri(URI.create(embeddingsUrl()))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();

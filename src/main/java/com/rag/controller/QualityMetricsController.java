@@ -26,7 +26,7 @@ public class QualityMetricsController {
             @RequestBody EvaluationRequest request) {
 
         return metricsService.runBatchEvaluation(
-                (Map<String, List<String>>) request.getTestQueries(),
+                request.getTestQueries(),
                 request.getGroundTruth(),
                 request.getSearchType()
         );
@@ -44,12 +44,13 @@ public class QualityMetricsController {
     }
 
     public static class EvaluationRequest {
-        private Map<String, String> testQueries;
+        // key: строка запроса, value: список (не используется напрямую, но держим структуру для расширения)
+        private Map<String, List<String>> testQueries;
         private Map<String, List<String>> groundTruth;
         private String searchType; // "semantic" or "hybrid"
 
-        public Object getTestQueries() { return testQueries; }
-        public void setTestQueries(Map<String, String> testQueries) { this.testQueries = testQueries; }
+        public Map<String, List<String>> getTestQueries() { return testQueries; }
+        public void setTestQueries(Map<String, List<String>> testQueries) { this.testQueries = testQueries; }
 
         public Map<String, List<String>> getGroundTruth() { return groundTruth; }
         public void setGroundTruth(Map<String, List<String>> groundTruth) { this.groundTruth = groundTruth; }

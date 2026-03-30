@@ -2,7 +2,6 @@ package com.rag.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.io.RandomAccessRead;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -46,7 +45,10 @@ public class TextExtractionService {
     }
 
     private String extractFromPdf(InputStream inputStream) throws Exception {
-        try (PDDocument document = Loader.loadPDF((RandomAccessRead) inputStream)) {
+        // В PDFBox 3 перегрузка Loader.loadPDF(InputStream) может отсутствовать,
+        // поэтому читаем InputStream в байты.
+        byte[] pdfBytes = inputStream.readAllBytes();
+        try (PDDocument document = Loader.loadPDF(pdfBytes)) {
             PDFTextStripper stripper = new PDFTextStripper();
             String text = stripper.getText(document);
             log.info("Extracted {} characters from PDF", text.length());
